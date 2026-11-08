@@ -109,8 +109,12 @@ if prompt:
                 )
                 reply = response.text
             except Exception as e:
-                st.error(f"Error: {e}")
-                st.stop()
+                if "429" in str(e) or "RESOURCE_EXHAUSTED" in str(e):
+                    st.warning("CineBuddy has used its free daily limit. Please try again later! 🎬")
+                else:
+                    st.error("Something went wrong. Please try again in a moment.")
+                    st.stop()
+                
         st.markdown(reply)
 
     st.session_state.messages.append({"role": "assistant", "content": reply})
